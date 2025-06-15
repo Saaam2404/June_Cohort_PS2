@@ -102,5 +102,3 @@ class Diagnosis:
             if match:
                 return match.group(0)
         return "Not specified"
-
-

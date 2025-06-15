@@ -11,13 +11,10 @@ def voice():
     global t
     if(t%3==1):
         label.config(text="Give Personal info of patient")
-        print(t)
     elif(t%3==2):
         label.config(text="Tell the symptoms")
-        print(t)
     elif(t%3==0):
         label.config(text="Give the appointment date")
-        print(t)
     threading.Thread(target=listen).start()
 
 def listen():
