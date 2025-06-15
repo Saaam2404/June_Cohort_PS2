@@ -4,10 +4,20 @@ from PIL import Image, ImageTk
 from Speech_to_Text import Voice
 import threading
 import os
+from parse import PersonalInfo,Diagnosis
 
 vc=Voice()
 def voice():
-    label.config(text="Listening... Please speak.")
+    global t
+    if(t%3==1):
+        label.config(text="Give Personal info of patient")
+        print(t)
+    elif(t%3==2):
+        label.config(text="Tell the symptoms")
+        print(t)
+    elif(t%3==0):
+        label.config(text="Give the appointment date")
+        print(t)
     threading.Thread(target=listen).start()
 
 def listen():
@@ -24,18 +34,60 @@ def confirm_text(text):
     label.yes_btn.pack(pady=(2,0))
     label.no_btn.pack(pady=(2,0))
 
+
 def on_yes(text):
     global confirmed_text
+    global personal_info
+    global symptoms
+    global appointment_date
+    global t
     confirmed_text.append(text)
     label.config(text=f"Confirmed: {text}")
     label.yes_btn.destroy()
     label.no_btn.destroy()
+    if(t%3==1): 
+        personal_info = PersonalInfo.extract_info(text)
+        t+=1
+        voice()
+    elif(t%3==2):
+        symptoms = Diagnosis.extract_symptoms(text)
+        t+=1
+        voice()
+    elif(t%3==0):
+        appointment_date = Diagnosis.extract_appointment_date(text)
+        t+=1
+    if(t%4==0):
+        display_full_info(personal_info,symptoms,appointment_date)
+    return confirmed_text
 
 def on_no():
     label.config(text="Please speak again.")
     label.yes_btn.destroy()
     label.no_btn.destroy()
     voice() 
+
+def display_full_info(personal_info, symptoms, appointment_date):
+    # Remove previous info labels
+    for widget in root.pack_slaves():
+        if isinstance(widget, tk.Label) and widget.cget("fg") == "blue":
+            widget.destroy()
+
+    tk.Label(root, text="--- Personal Info ---", fg="#060900", font=("Helvetica", 14), bg="#92CD1D").pack()
+    for key, value in personal_info.items():
+        tk.Label(root, text=f"{key}: {value}", fg="#060900", font=("Helvetica", 12), bg="#92CD1D").pack()
+
+    tk.Label(root, text="--- Diagnosis ---", fg="#060900", font=("Helvetica", 14), bg="#92CD1D").pack()
+
+    if symptoms:
+        for symptom, dept in symptoms:
+            tk.Label(root, text=f"{symptom.title()} → {dept}", fg="#060900", font=("Helvetica", 12), bg="#92CD1D").pack()
+    else:
+        tk.Label(root, text="No symptoms detected.", fg="#060900", font=("Helvetica", 12), bg="#92CD1D").pack()
+
+    tk.Label(root, text=f"Appointment Date: {appointment_date}", fg="#060900", font=("Helvetica", 12), bg="#92CD1D").pack()
+
+
+#Code starts here
 
 root=tk.Tk()
 root.geometry("600x600")
@@ -45,6 +97,10 @@ root.title("Voice-to-Text")
 label = tk.Label(root, text="Welcome User", font=("Helvetica", 25), wraplength=380,bg="#92CD1D")
 label.pack(pady=10)
 
+t=1
+personal_info=""
+symptoms=""
+appointment_date=""
 #MicPic
 base_path=os.path.dirname(__file__)
 mic_path=os.path.join(base_path,"microphone-black-shape.png")
@@ -57,6 +113,5 @@ confirmed_text=[]
 
 label = tk.Label(root, text="Press Mic to Speak", font=("Helvetica", 14), wraplength=380,bg="#92CD1D")
 label.pack(pady=10)
-
 
 root.mainloop()

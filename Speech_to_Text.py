@@ -9,19 +9,19 @@ class Voice:
         try:
             with self.microphone as source:
                 print(".......Speak Something.......")
-                speech=self.recognizer.listen(source,timeout=5)
+                speech=self.recognizer.record(source,duration=15)
                 text=self.recognizer.recognize_google(speech)
                 return text
         except sr.UnknownValueError:
-            print("Speech was not clear!!")
-            print("Try again!!")
+            #print("Speech was not clear!!")
+            #print("Try again!!")
             return None
         except sr.WaitTimeoutError:
-            print("Time over....You did not speak anything")
+            #print("Time over....You did not speak anything")
             return None
         except OSError:
-            print("Microphone not found!!")
+            #print("Microphone not found!!")
             return None
         except Exception:
-            print("Something unexpected happened!!")
+            #print("Something unexpected happened!!")
             return None
