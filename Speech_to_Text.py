@@ -13,15 +13,10 @@ class Voice:
                 text=self.recognizer.recognize_google(speech)
                 return text
         except sr.UnknownValueError:
-            #print("Speech was not clear!!")
-            #print("Try again!!")
             return None
         except sr.WaitTimeoutError:
-            #print("Time over....You did not speak anything")
             return None
         except OSError:
-            #print("Microphone not found!!")
             return None
         except Exception:
-            #print("Something unexpected happened!!")
             return None
