@@ -78,7 +78,7 @@ def display_full_info(personal_info, symptoms, appointment_date):
     global patient_age
     global patient_address
     global patient_gender
-    # Remove previous info labels
+    # Removing previous info labels
     for widget in root.pack_slaves():
         if isinstance(widget, tk.Label) and widget.cget("fg") == "blue":
             widget.destroy()
@@ -96,6 +96,8 @@ def display_full_info(personal_info, symptoms, appointment_date):
         tk.Label(root, text="No symptoms detected.", fg="#060900", font=("Helvetica", 12), bg="#92CD1D").pack()
     
     tk.Label(root, text=f"Appointment Date: {appointment_date}", fg="#060900", font=("Helvetica", 12), bg="#92CD1D").pack()
+
+    #Saving the information to excel file
     
     patient_name = personal_info.get("Name", "Unknown")
     patient_gender = personal_info.get("Gender", "Unknown")
@@ -104,11 +106,9 @@ def display_full_info(personal_info, symptoms, appointment_date):
     patient_symptoms = [s[0] for s in symptoms] if symptoms else []
     patient_appoint_date = appointment_date
 
-    #if patient_name and patient_symptoms and appointment_date  and patient_gender and patient_address and = "Not specified":
     Appointments.save_appointment(patient_name,patient_age,patient_gender,patient_address, patient_symptoms, appointment_date)
     tk.Label(root, text="Appointment saved to Excel!", fg="#1A0E85", font=("Helvetica", 12), bg="#92CD1D").pack(pady=10)
-    # else:
-    #     tk.Label(root, text="Unable to save appointment: Missing info", fg="#CB0505", font=("Helvetica", 12), bg="#92CD1D").pack(pady=10)
+
 
 
 #Code starts here
