@@ -1,12 +1,19 @@
 import tkinter as tk
-from tkinter import ttk
 from PIL import Image, ImageTk
 from Speech_to_Text import Voice
 import threading
 import os
 from parse import PersonalInfo,Diagnosis
+from database import Appointments
 
 vc=Voice()
+patient_name=""
+patient_symptoms=""
+patient_appoint_date=""
+patient_gender=""
+patient_address=""
+patient_age=""
+
 def voice():
     global t
     if(t%3==1):
@@ -64,6 +71,13 @@ def on_no():
     voice() 
 
 def display_full_info(personal_info, symptoms, appointment_date):
+
+    global patient_name
+    global patient_symptoms
+    global patient_appoint_date
+    global patient_age
+    global patient_address
+    global patient_gender
     # Remove previous info labels
     for widget in root.pack_slaves():
         if isinstance(widget, tk.Label) and widget.cget("fg") == "blue":
@@ -80,8 +94,21 @@ def display_full_info(personal_info, symptoms, appointment_date):
             tk.Label(root, text=f"{symptom.title()} → {dept}", fg="#060900", font=("Helvetica", 12), bg="#92CD1D").pack()
     else:
         tk.Label(root, text="No symptoms detected.", fg="#060900", font=("Helvetica", 12), bg="#92CD1D").pack()
-
+    
     tk.Label(root, text=f"Appointment Date: {appointment_date}", fg="#060900", font=("Helvetica", 12), bg="#92CD1D").pack()
+    
+    patient_name = personal_info.get("Name", "Unknown")
+    patient_gender = personal_info.get("Gender", "Unknown")
+    patient_age = personal_info.get("Age", "Unknown")
+    patient_address = personal_info.get("Address", "Unknown")
+    patient_symptoms = [s[0] for s in symptoms] if symptoms else []
+    patient_appoint_date = appointment_date
+
+    #if patient_name and patient_symptoms and appointment_date  and patient_gender and patient_address and = "Not specified":
+    Appointments.save_appointment(patient_name,patient_age,patient_gender,patient_address, patient_symptoms, appointment_date)
+    tk.Label(root, text="Appointment saved to Excel!", fg="#1A0E85", font=("Helvetica", 12), bg="#92CD1D").pack(pady=10)
+    # else:
+    #     tk.Label(root, text="Unable to save appointment: Missing info", fg="#CB0505", font=("Helvetica", 12), bg="#92CD1D").pack(pady=10)
 
 
 #Code starts here
@@ -98,7 +125,9 @@ t=1
 personal_info=""
 symptoms=""
 appointment_date=""
+
 #MicPic
+
 base_path=os.path.dirname(__file__)
 mic_path=os.path.join(base_path,"microphone-black-shape.png")
 mic_pic=Image.open(mic_path)

@@ -2,6 +2,7 @@ import re
 import spacy
 import time
 from Speech_to_Text import Voice
+
 nlp = spacy.load("en_core_web_sm")
 
 class PersonalInfo:
@@ -48,7 +49,6 @@ class PersonalInfo:
                 start_index = text.lower().find(keyword)
                 address = text[start_index + len(keyword):].split('.')[0].strip()
                 break
-
         return {
             "Name": name or "Unknown",
             "Age": age or "Unknown",
