@@ -46,6 +46,12 @@ A voice-controlled GUI application for collecting patient details, diagnosing ba
 - `Appointments.display_appointments()`: Prints all records from the file.
 
 ---
+## Deployment
+[Deployment Video](https://drive.google.com/drive/folders/1KiiD0MeB32g2h04x0WXqkzC7uw1SLuBx?usp=sharing)
+The link contains a recording demonstating how our project works.
+
+---
+
 ## Execution
 To execute and view the project run GUI.py file. All the modules have been implemented in it.
 
