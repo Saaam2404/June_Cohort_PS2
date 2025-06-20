@@ -18,7 +18,7 @@ class Appointments:
             "Address":address,
             "Symptoms": ", ".join(symptoms),
             "Appointment Date": appointment_date,
-            "Timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            "Timestamp": datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         }
 
         try:
